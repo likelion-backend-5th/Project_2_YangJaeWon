@@ -2,7 +2,6 @@ package com.example.project2.controller;
 
 import com.example.project2.dto.ArticleDto;
 import com.example.project2.dto.CommentDto;
-import com.example.project2.entity.ArticleImages;
 import com.example.project2.entity.CustomUserDetails;
 import com.example.project2.entity.User;
 import com.example.project2.service.ArticleService;
@@ -11,7 +10,6 @@ import com.example.project2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -75,12 +70,45 @@ public class ArticleController {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
             model.addAttribute("article", articleDto);
-            model.addAttribute("sessionDto", userDetails);
+            model.addAttribute("loginUser", userDetails);
             model.addAttribute("commentList", commentService.readAllComments(articleId));
             return "readArticle";
         } else {
             return "redirect:/articles";
         }
+    }
+    @GetMapping("/articles/{id}/update-view")
+    public String updateView(
+            @PathVariable("id") Long articleId,
+            Model model
+    ) {
+        ArticleDto articleDto = articleService.readArticle(articleId);
+        model.addAttribute("article", articleDto);
+        return "updateArticle";
+    }
+    @PostMapping("articles/{id}/update-view")
+    public String updateArticle(
+            @PathVariable("id")
+            Long articleId,
+            ArticleDto articleDto,
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication
+    ) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User loginUser = userService.readUser(userDetails.getUsername());
+
+        articleService.updateArticle(articleId, articleDto, loginUser);
+        return String.format("redirect:/articles/%s", articleId);
+    }
+    @PostMapping("/articles/{id}/delete")
+    public String deleteArticle(
+            @PathVariable("id") Long articleId,
+            Authentication authentication
+    ) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User loginUser = userService.readUser(userDetails.getUsername());
+        articleService.deleteArticle(articleId, loginUser);
+        return "redirect:/articles";
     }
 
     @PostMapping("/articles/{id}")

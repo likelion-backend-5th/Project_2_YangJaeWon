@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Article</title>
+</head>
+<body>
+  <h1>피드 수정</h1>
+  <form th:action="@{/article/{id}/update-view (id=${article.getId()})}" method="post" enctype="multipart/form-data">
+    <label for="title-input">Title:
+      <input type="text" id = "title-input" name = "title" th:value="${article.title}">
+    </label>
+    <br>
+    <label for="content-input">Content:
+      <input type="text" id = "content-input" name = "content" th:value="${article.content}">
+    </label>
+    <br>
+
+    <div>
+      <input type="file" name="file">
+    </div>
+    <!--제출 버튼-->
+    <input type="submit">
+    <a href="/board">뒤로가기</a>
+  </form>
+</body>
+</html>

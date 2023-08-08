@@ -21,6 +21,7 @@ public class Article {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_ARTICLE_USER"))
     private User user;
+    private String title;
 
     private String content;
 

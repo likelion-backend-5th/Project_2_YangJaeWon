@@ -12,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -66,6 +68,28 @@ public class ArticleService {
             return ArticleDto.fromEntity(article);
         }
         return null;
+    }
+
+    public void updateArticle(Long articleId, ArticleDto articleDto, User loginUser) {
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
+        if(optionalArticle.isPresent()) {
+            Article article = optionalArticle.get();
+            if(article.getUser().getUsername().equals(loginUser.getUsername())) {
+                article.setTitle(articleDto.getTitle());
+                article.setContent(article.getContent());
+                articleRepository.save(article);
+            } else throw new IllegalArgumentException("수정 권한이 없습니다.");
+        } throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다: " + articleId);
+    }
+
+    public void deleteArticle(Long articleId, User loginUser) {
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
+        if(optionalArticle.isPresent()) {
+            Article article = optionalArticle.get();
+            if(article.getUser().getUsername().equals(loginUser.getUsername())) {
+                articleRepository.deleteById(articleId);
+            } else throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
 

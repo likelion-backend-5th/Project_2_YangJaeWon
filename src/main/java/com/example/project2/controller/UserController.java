@@ -116,13 +116,13 @@ public class UserController {
     ) throws IOException {
         // 저장할 경로를 생성한다
         Files.createDirectories(Path.of("media"));
-// 저장할 파일이름을 경로를 포함해 지정한다.
+        // 저장할 파일이름을 경로를 포함해 지정한다.
         Path path = Path.of("media/filename.png");
-// 저장한다.
+        // 저장한다.
         multipartFile.transferTo(path);
         // 저장할 파일 이름
         File file = new File("./media/filename.png");
-// 파일에 저장하기 위한 OutputStream
+        // 파일에 저장하기 위한 OutputStream
         try (OutputStream outputStream = new FileOutputStream(file)) {
             // byte[] 데이터를 받는다.
             byte[] fileBytes = multipartFile.getBytes();

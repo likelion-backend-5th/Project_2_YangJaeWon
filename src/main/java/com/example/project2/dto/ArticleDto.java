@@ -10,12 +10,14 @@ import lombok.Data;
 public class ArticleDto {
     private Long id;
     private User user;
+    private String title;
     private String content;
 
     public static ArticleDto fromEntity(Article entity) {
         return ArticleDto.builder()
                 .id(entity.getId())
                 .user(entity.getUser())
+                .title(entity.getTitle())
                 .content(entity.getContent())
                 .build();
     }

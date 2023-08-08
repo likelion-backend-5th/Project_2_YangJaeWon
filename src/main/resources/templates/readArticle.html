@@ -7,5 +7,20 @@
 <body>
   <h1>[[${article.id}]]. [[${article.title}]]</h1>
   <p>내용: [[${article.content}]]</p>
+  <br>
+  <div>
+      <form th:action="@{/articles/{id} (id=${article.id})}" method="post" style="display: inline;">
+          <input type="text" id="content" name="comment" class="form-control" placeholder="댓글을 입력해주세요.." aria-label="댓글을 입력해주세요.." aria-describedby="basic-addon2">
+          <button class="btn btn-primary">등록</button>
+      </form>
+  </div>
+  <br>
+  <p>댓글 목록</p>
+
+  <div th:each="commentDTO: ${commentList}">
+      <p>작성자: [[${commentDTO.getUser().getUsername()}]]</p>
+      <p>내용: [[${commentDTO.getContent()}]]</p>
+      <hr>
+  </div>
 </body>
 </html>
