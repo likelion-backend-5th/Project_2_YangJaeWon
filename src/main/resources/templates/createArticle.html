@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>create</title>
+</head>
+<body>
+
+    <form action="/articles/create" method="post" enctype="multipart/form-data">
+        <label for="title-input">제목:
+            <input type="text" id = "title-input" name = "title">
+        </label>
+        <br>
+        <label for="content-input">내용:
+            <input type="text" id = "content-input" name = "content">
+        </label>
+        <br>
+        <input type="file" name="photo">
+        <input type="submit">
+        <br>
+        <a href="/articles">Back</a>
+    </form>
+
+</body>
+</html>
